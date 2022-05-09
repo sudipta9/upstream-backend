@@ -67,7 +67,7 @@ const changePasswordController = (req, res) => {
 };
 
 const forgetPasswordController = (req, res) => {
-  const { email } = req.body;
+  const { email, domain } = req.body;
   if (!email || email === "")
     return res.status(400).json({
       success: false,
@@ -82,7 +82,7 @@ const forgetPasswordController = (req, res) => {
     if (!user)
       return res.status(400).json({
         success: false,
-        msg: "User not registered",
+        msg: "User not registered, please sign up to use our service",
       });
     const token = forgetPasswordToken(user._id, user.email);
     user.resetPasswordToken = token;
@@ -95,13 +95,40 @@ const forgetPasswordController = (req, res) => {
         });
       else {
         // console.log(token);
-        sendMail(email, "Reset your password", token);
+        const resetPasswordMsg = `please click on the following link to reset your password. ${domain}?forgetpasswd=${user._id}&token=${token}`;
+        sendMail(email, "Reset your password", resetPasswordMsg);
         return res.status(200).json({
           success: true,
-          msg: "Reset password link sent to your email, please check your email to reset your password",
+          msg: "Reset password link has been sent to your email address, please check your email to reset your password",
         });
       }
     });
+  });
+};
+
+const checkResetPasswordToken = (req, res) => {
+  if (!req.query.token)
+    return res.status(400).json({
+      success: false,
+      msg: "Reset password token is missing",
+    });
+  User.findOne({ resetPasswordToken: req.query.token }, (err, user) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        msg: "Oops! Something happened unexpectedly",
+      });
+    }
+    if (!user || user.resetPasswordTokenExpires <= Date.now())
+      return res.status(400).json({
+        success: false,
+        msg: "Token expired please generate a new token to reset your password",
+      });
+    else
+      return res.status(200).json({
+        success: true,
+      });
   });
 };
 
@@ -125,12 +152,12 @@ const resetPasswordController = (req, res) => {
         msg: "Oops! Something happened unexpectedly",
       });
     }
-    if (!user)
+    if (!user || user.resetPasswordTokenExpires <= Date.now())
       return res.status(400).json({
         success: false,
         msg: "Token expired please generate a new token to reset password",
       });
-    if (user.resetPasswordTokenExpires > Date.now()) {
+    else {
       user.password = req.body.password;
       user.resetPasswordToken = undefined;
       user.resetPasswordTokenExpires = undefined;
@@ -147,11 +174,6 @@ const resetPasswordController = (req, res) => {
           msg: "Password changed successfully",
         });
       });
-    } else {
-      return res.status(400).json({
-        success: false,
-        msg: "Token expired please generate a new token to reset password",
-      });
     }
   });
 };
@@ -160,5 +182,6 @@ module.exports = {
   signOutController,
   changePasswordController,
   forgetPasswordController,
+  checkResetPasswordToken,
   resetPasswordController,
 };

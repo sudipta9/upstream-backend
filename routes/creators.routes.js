@@ -57,7 +57,7 @@ router.post(
   changePasswordController
 );
 
-router.get("/forget-password", forgetPasswordController);
+router.post("/forget-password", forgetPasswordController);
 router.post("/reset-password", resetPasswordController);
 
 module.exports = router;

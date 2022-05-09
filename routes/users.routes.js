@@ -9,6 +9,7 @@ const {
   changePasswordController,
   resetPasswordController,
   forgetPasswordController,
+  checkResetPasswordToken,
 } = require("../controllers/common.controller");
 
 router.post("/sign-up", userController.userSignupController);
@@ -43,8 +44,8 @@ router.post(
   changePasswordController
 );
 
-router.get("/forget-password", forgetPasswordController);
-
+router.post("/forget-password", forgetPasswordController);
+router.get("/check-reset-password-token", checkResetPasswordToken);
 router.post("/reset-password", resetPasswordController);
 
 module.exports = router;
