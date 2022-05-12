@@ -25,6 +25,9 @@ const app = express();
 const userRouters = require("./routes/users.routes");
 const adminRouters = require("./routes/admins.routes");
 const creatorRouters = require("./routes/creators.routes");
+const planRouters = require("./routes/plans.routes");
+const paymentRouters = require("./routes/payments.routes");
+const subscriptionRouters = require("./routes/subscriptions.routes");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -40,6 +43,9 @@ app.use(
 app.use("/user", userRouters);
 app.use("/admin", adminRouters);
 app.use("/creator", creatorRouters);
+app.use("/api/plans", planRouters);
+app.use("/api/payment", paymentRouters);
+app.use("/api", subscriptionRouters);
 
 app.listen(port, async () => {
   await connectDB();

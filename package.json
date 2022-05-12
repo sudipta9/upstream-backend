@@ -19,6 +19,7 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "razorpay": "^2.8.1",
     "validator": "^13.7.0"
   },
   "scripts": {

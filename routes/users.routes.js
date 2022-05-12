@@ -47,5 +47,6 @@ router.post(
 router.post("/forget-password", forgetPasswordController);
 router.get("/check-reset-password-token", checkResetPasswordToken);
 router.post("/reset-password", resetPasswordController);
+// router.get("/get-subscription", )
 
 module.exports = router;

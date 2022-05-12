@@ -32,17 +32,24 @@ const userSignupController = (req, res) => {
           password: password,
           role: "user",
         });
-        user.save((err) => {
+        user.save((err, data) => {
           if (err)
             return res.status(500).json({
               success: false,
               msg: "Oops! Something happened unexpectedly",
             });
-          else
+          else {
+            const token = signToken(data._id);
+            res.cookie("access_token", token, {
+              // httpOnly: true,
+              sameSite: true,
+              expires: new Date(Date.now() + 604800000),
+            });
             return res.status(201).json({
               success: true,
               msg: "User created successfully",
             });
+          }
         });
       }
     });
@@ -54,8 +61,9 @@ const userSignInController = (req, res) => {
     const { _id, role } = req.user;
     const token = signToken(_id);
     res.cookie("access_token", token, {
-      httpOnly: true,
+      // httpOnly: true,
       sameSite: true,
+      expires: new Date(Date.now() + 604800000),
     });
     return res.status(200).json({
       success: true,
