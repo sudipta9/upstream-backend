@@ -7,7 +7,7 @@ const creatorSignInController = (req, res) => {
     if (role === "creator") {
       const token = signToken(_id);
       res.cookie("access_token", token, {
-        httpOnly: true,
+        // httpOnly: true,
         sameSite: true,
       });
       return res.status(200).json({

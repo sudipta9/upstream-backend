@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: undefined,
   },
+  creatorsName: {
+    type: String,
+    default: undefined,
+  },
 });
 
 userSchema.pre("save", function (next) {

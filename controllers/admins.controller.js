@@ -32,11 +32,16 @@ const adminSignInController = (req, res) => {
 };
 
 const addUserController = (req, res) => {
-  const { email, role = "user" } = req.body;
+  const { email, role = "user", creatorsName = null } = req.body;
   if (!email || !isEmail(email))
     return res.status(400).json({
       success: false,
       msg: "Provide a valid email",
+    });
+  if (role === "creator" && !creatorsName)
+    return res.status(400).json({
+      success: false,
+      msg: "Creators Name is important",
     });
   const password = generatePassword();
   User.findOne({ email }, (err, isExistingCreator) => {
@@ -54,6 +59,7 @@ const addUserController = (req, res) => {
       email,
       password,
       role,
+      creatorsName: role === "creator" ? creatorsName : null,
     });
     creator.save((err) => {
       if (err)

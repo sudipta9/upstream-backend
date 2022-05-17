@@ -112,11 +112,11 @@ const verifyPaymentController = async (req, res) => {
                       success: false,
                       msg: "Oops! Something happened unexpectedly",
                     });
-                  }
-                  return res.status(200).json({
-                    success: true,
-                    data,
-                  });
+                  } else
+                    return res.status(200).json({
+                      success: true,
+                      data,
+                    });
                 });
               }
             }

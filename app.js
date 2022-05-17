@@ -28,6 +28,7 @@ const creatorRouters = require("./routes/creators.routes");
 const planRouters = require("./routes/plans.routes");
 const paymentRouters = require("./routes/payments.routes");
 const subscriptionRouters = require("./routes/subscriptions.routes");
+const videoRouters = require("./routes/videos.routes");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -46,6 +47,8 @@ app.use("/creator", creatorRouters);
 app.use("/api/plans", planRouters);
 app.use("/api/payment", paymentRouters);
 app.use("/api", subscriptionRouters);
+app.use("/api/videos", express.static("media/uploads"));
+app.use("/api/videos", videoRouters);
 
 app.listen(port, async () => {
   await connectDB();
